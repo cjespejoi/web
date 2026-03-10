@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Web Personal – Cynthia Espejo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --green:  #5AF527;
+      --blue:   #27C1F5;
+      --purple: #C127F5;
+      --orange: #F55A27;
+      --dark:   #0a0d0f;
+      --dark2:  #111518;
+      --dark3:  #181e24;
+      --card:   #1a2128;
+      --text:   #e8edf2;
+      --muted:  #7a8a96;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--dark);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 4rem;
+      background: rgba(10,13,15,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(90,245,39,0.12);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem; font-weight: 700;
+      color: var(--green);
+      letter-spacing: 0.05em;
+    }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      text-decoration: none; color: var(--muted);
+      font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase;
+      transition: color .3s;
+    }
+    .nav-links a:hover { color: var(--green); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 8rem 4rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+    }
+    .hero-glow-1 { width: 500px; height: 500px; background: rgba(90,245,39,0.12); top: -100px; right: 0; }
+    .hero-glow-2 { width: 350px; height: 350px; background: rgba(39,193,245,0.1); bottom: 0; left: 0; }
+
+    .hero-text { position: relative; z-index: 1; }
+    .hero-tag {
+      display: inline-block;
+      border: 1px solid var(--green);
+      color: var(--green);
+      font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 0.4rem 1rem; border-radius: 2px;
+      margin-bottom: 1.5rem;
+      animation: fadeUp .8s ease both;
+    }
+    .hero-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 900; line-height: 1.05;
+      animation: fadeUp .9s ease .1s both;
+    }
+    .hero-name span { color: var(--green); }
+    .hero-title {
+      font-size: 1.1rem; color: var(--muted);
+      margin: 1.2rem 0 2rem;
+      line-height: 1.6;
+      max-width: 480px;
+      animation: fadeUp .9s ease .2s both;
+    }
+    .hero-badges {
+      display: flex; flex-wrap: wrap; gap: .6rem;
+      margin-bottom: 2.5rem;
+      animation: fadeUp .9s ease .3s both;
+    }
+    .badge {
+      padding: .35rem .9rem;
+      border-radius: 2px;
+      font-size: .72rem; letter-spacing: .07em; text-transform: uppercase; font-weight: 600;
+    }
+    .badge-green  { background: rgba(90,245,39,.12);  color: var(--green);  border: 1px solid rgba(90,245,39,.3); }
+    .badge-blue   { background: rgba(39,193,245,.12); color: var(--blue);   border: 1px solid rgba(39,193,245,.3); }
+    .badge-purple { background: rgba(193,39,245,.12); color: var(--purple); border: 1px solid rgba(193,39,245,.3); }
+    .badge-orange { background: rgba(245,90,39,.12);  color: var(--orange); border: 1px solid rgba(245,90,39,.3); }
+
+    .hero-cta {
+      display: flex; gap: 1rem;
+      animation: fadeUp .9s ease .4s both;
+    }
+    .btn-primary {
+      background: var(--green); color: var(--dark);
+      padding: .8rem 2rem; border: none; border-radius: 2px;
+      font-family: 'DM Sans', sans-serif; font-weight: 600;
+      font-size: .9rem; letter-spacing: .06em; text-transform: uppercase;
+      cursor: pointer; text-decoration: none;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(90,245,39,.35); }
+    .btn-outline {
+      background: transparent; color: var(--text);
+      padding: .8rem 2rem; border: 1px solid rgba(255,255,255,.2); border-radius: 2px;
+      font-family: 'DM Sans', sans-serif; font-weight: 500;
+      font-size: .9rem; letter-spacing: .06em; text-transform: uppercase;
+      cursor: pointer; text-decoration: none;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-outline:hover { border-color: var(--blue); color: var(--blue); }
+
+    /* Photo */
+    .hero-photo {
+      position: relative; z-index: 1;
+      display: flex; justify-content: center; align-items: center;
+      animation: fadeUp 1s ease .2s both;
+    }
+    .photo-frame {
+      position: relative;
+      width: 340px; height: 400px;
+    }
+    .photo-frame::before {
+      content: '';
+      position: absolute; inset: -3px;
+      background: linear-gradient(135deg, var(--green), var(--blue), var(--purple));
+      border-radius: 4px;
+      z-index: -1;
+    }
+    .photo-frame::after {
+      content: '';
+      position: absolute;
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      top: 12px; left: 12px;
+      border-radius: 4px;
+      z-index: -2;
+      opacity: .3;
+    }
+    .photo-frame img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: top;
+      border-radius: 3px;
+      display: block;
+    }
+    .photo-frame .photo-fallback {
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, var(--dark3), var(--card));
+      border-radius: 3px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: .8rem;
+    }
+    .photo-fallback svg { opacity: .3; }
+    .photo-fallback span { color: var(--muted); font-size: .8rem; }
+
+    .years-badge {
+      position: absolute;
+      bottom: -20px; right: -20px;
+      background: var(--dark2);
+      border: 2px solid var(--green);
+      border-radius: 4px;
+      padding: 1rem 1.2rem;
+      text-align: center;
+    }
+    .years-badge .num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem; font-weight: 900;
+      color: var(--green); line-height: 1;
+    }
+    .years-badge .label {
+      font-size: .65rem; color: var(--muted);
+      letter-spacing: .1em; text-transform: uppercase;
+    }
+
+    /* ── STATS ── */
+    #stats {
+      background: var(--dark2);
+      border-top: 1px solid rgba(255,255,255,.06);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      padding: 3.5rem 4rem;
+    }
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 2rem; max-width: 1200px; margin: 0 auto;
+    }
+    .stat-item { text-align: center; }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 4vw, 3.5rem); font-weight: 900;
+      line-height: 1;
+      background: linear-gradient(90deg, var(--green), var(--blue));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .stat-label {
+      font-size: .8rem; color: var(--muted);
+      letter-spacing: .08em; text-transform: uppercase;
+      margin-top: .5rem; line-height: 1.4;
+    }
+
+    /* ── SECTIONS COMMON ── */
+    section { padding: 6rem 4rem; max-width: 1200px; margin: 0 auto; }
+    .section-header { margin-bottom: 3.5rem; }
+    .section-tag {
+      font-size: .72rem; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--green); margin-bottom: .8rem;
+      display: flex; align-items: center; gap: .6rem;
+    }
+    .section-tag::before { content: ''; display: block; width: 24px; height: 2px; background: var(--green); }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 700;
+    }
+
+    /* ── EXPERIENCE ── */
+    #experiencia { max-width: 1200px; }
+    .exp-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+    .exp-card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 4px;
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform .3s, border-color .3s;
+    }
+    .exp-card:hover { transform: translateY(-4px); border-color: rgba(90,245,39,.25); }
+    .exp-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 4px; height: 100%;
+    }
+    .exp-card.current::before  { background: linear-gradient(to bottom, var(--green), var(--blue)); }
+    .exp-card.mid::before      { background: linear-gradient(to bottom, var(--blue), var(--purple)); }
+    .exp-card.early::before    { background: linear-gradient(to bottom, var(--purple), var(--orange)); }
+
+    .exp-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+    .exp-company { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; }
+    .exp-role { font-size: .9rem; color: var(--blue); margin-top: .25rem; font-weight: 500; }
+    .exp-date { font-size: .78rem; color: var(--muted); letter-spacing: .06em; background: rgba(255,255,255,.05); padding: .35rem .8rem; border-radius: 2px; white-space: nowrap; }
+
+    .exp-logros { list-style: none; }
+    .exp-logros li {
+      display: flex; gap: 1rem; align-items: flex-start;
+      padding: .75rem 0;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+      font-size: .92rem; line-height: 1.6; color: #c8d4dc;
+    }
+    .exp-logros li:last-child { border-bottom: none; }
+    .logro-icon { color: var(--green); font-size: 1.1rem; flex-shrink: 0; margin-top: .15rem; }
+
+    /* highlight numbers */
+    .hl { color: var(--green); font-weight: 700; }
+    .hl-blue { color: var(--blue); font-weight: 700; }
+    .hl-purple { color: var(--purple); font-weight: 700; }
+
+    /* ── PROJECTS ── */
+    #proyectos { background: var(--dark2); max-width: 100%; padding: 6rem 4rem; }
+    #proyectos > * { max-width: 1200px; margin-left: auto; margin-right: auto; }
+    #proyectos .section-header { max-width: 1200px; margin: 0 auto 3.5rem; }
+    .proj-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
+    .proj-card {
+      background: var(--dark);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 4px;
+      padding: 2rem;
+      transition: transform .3s, border-color .3s;
+      position: relative; overflow: hidden;
+    }
+    .proj-card:hover { transform: translateY(-4px); }
+    .proj-card:hover .proj-glow { opacity: 1; }
+    .proj-glow {
+      position: absolute; top: -60px; right: -60px;
+      width: 140px; height: 140px;
+      border-radius: 50%; filter: blur(60px);
+      opacity: 0; transition: opacity .4s;
+    }
+    .proj-card:nth-child(1) .proj-glow { background: var(--green); }
+    .proj-card:nth-child(2) .proj-glow { background: var(--blue); }
+    .proj-card:nth-child(3) .proj-glow { background: var(--purple); }
+    .proj-card:nth-child(4) .proj-glow { background: var(--orange); }
+    .proj-card:nth-child(5) .proj-glow { background: var(--green); }
+    .proj-card:nth-child(6) .proj-glow { background: var(--blue); }
+
+    .proj-icon { font-size: 2rem; margin-bottom: 1rem; }
+    .proj-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; margin-bottom: .5rem; }
+    .proj-company { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 1rem; }
+    .proj-desc { font-size: .88rem; color: #a0b0bc; line-height: 1.65; }
+    .proj-metric {
+      margin-top: 1.2rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid rgba(255,255,255,.07);
+      font-size: .8rem;
+    }
+    .proj-metric strong {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      display: block;
+    }
+
+    /* ── CERTIFICATIONS ── */
+    #certificaciones { max-width: 1200px; }
+    .cert-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; }
+    .cert-pill {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 3px;
+      padding: .8rem 1rem;
+      font-size: .78rem; letter-spacing: .05em;
+      text-align: center; color: var(--muted);
+      transition: background .2s, color .2s, border-color .2s;
+    }
+    .cert-pill:hover { background: rgba(90,245,39,.08); color: var(--green); border-color: rgba(90,245,39,.3); }
+
+    /* ── EDUCATION ── */
+    #educacion { background: var(--dark2); max-width: 100%; padding: 6rem 4rem; }
+    #educacion .section-header { max-width: 1200px; margin: 0 auto 3.5rem; }
+    .edu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
+    .edu-card {
+      background: var(--dark);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 4px; padding: 2rem;
+      position: relative; overflow: hidden;
+    }
+    .edu-year {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem; font-weight: 900;
+      opacity: .06;
+      position: absolute; bottom: -.5rem; right: .5rem;
+      line-height: 1;
+    }
+    .edu-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+    .edu-degree { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; margin-bottom: .4rem; line-height: 1.3; }
+    .edu-uni { font-size: .8rem; color: var(--blue); margin-bottom: .3rem; }
+    .edu-date { font-size: .75rem; color: var(--muted); }
+
+    /* ── AWARDS ── */
+    #premios { max-width: 1200px; }
+    .awards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .award-card {
+      background: var(--card);
+      border: 1px solid rgba(245,90,39,.2);
+      border-radius: 4px; padding: 2rem;
+      display: flex; gap: 1.5rem; align-items: flex-start;
+      transition: transform .3s;
+    }
+    .award-card:hover { transform: translateX(6px); }
+    .award-icon { font-size: 2.2rem; flex-shrink: 0; }
+    .award-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; margin-bottom: .4rem; }
+    .award-org { font-size: .8rem; color: var(--orange); margin-bottom: .25rem; }
+    .award-year { font-size: .75rem; color: var(--muted); }
+
+    /* ── SKILLS ── */
+    #habilidades { background: var(--dark2); max-width: 100%; padding: 6rem 4rem; }
+    #habilidades .section-header { max-width: 1200px; margin: 0 auto 3.5rem; }
+    .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; max-width: 1200px; margin: 0 auto; }
+    .skills-col h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-bottom: 1.5rem; }
+    .skill-item { margin-bottom: 1.2rem; }
+    .skill-header { display: flex; justify-content: space-between; margin-bottom: .4rem; font-size: .85rem; }
+    .skill-bar { height: 4px; background: rgba(255,255,255,.08); border-radius: 2px; overflow: hidden; }
+    .skill-fill {
+      height: 100%; border-radius: 2px;
+      background: linear-gradient(90deg, var(--green), var(--blue));
+      transform: scaleX(0); transform-origin: left;
+      animation: fillBar 1.5s ease forwards;
+    }
+    @keyframes fillBar { to { transform: scaleX(1); } }
+
+    .lang-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: .9rem 1rem;
+      background: var(--dark);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 3px;
+      margin-bottom: .6rem;
+    }
+    .lang-level { font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; }
+
+    /* ── CONTACT ── */
+    #contacto { max-width: 1200px; }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+    .contact-intro { font-size: 1.05rem; color: var(--muted); line-height: 1.7; margin-bottom: 2rem; }
+    .contact-items { display: flex; flex-direction: column; gap: 1rem; }
+    .contact-item {
+      display: flex; align-items: center; gap: 1rem;
+      background: var(--card); border: 1px solid rgba(255,255,255,.07);
+      border-radius: 3px; padding: 1.1rem 1.5rem;
+      text-decoration: none; color: var(--text);
+      transition: border-color .3s;
+    }
+    .contact-item:hover { border-color: var(--green); }
+    .contact-icon { font-size: 1.3rem; width: 2rem; text-align: center; }
+    .contact-label { font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
+    .contact-value { font-size: .9rem; margin-top: .15rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 3rem;
+      border-top: 1px solid rgba(255,255,255,.06);
+      color: var(--muted); font-size: .8rem;
+    }
+    footer strong { color: var(--green); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 2rem; }
+      .nav-links { display: none; }
+      #hero { grid-template-columns: 1fr; padding: 7rem 2rem 3rem; text-align: center; }
+      .hero-photo { display: none; }
+      .hero-badges { justify-content: center; }
+      .hero-cta { justify-content: center; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      section { padding: 4rem 2rem; }
+      #proyectos, #educacion, #habilidades { padding: 4rem 2rem; }
+      .proj-grid, .edu-grid { grid-template-columns: 1fr; }
+      .skills-grid { grid-template-columns: 1fr; }
+      .awards-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">CE</div>
+  <ul class="nav-links">
+    <li><a href="#experiencia">Experiencia</a></li>
+    <li><a href="#proyectos">Proyectos</a></li>
+    <li><a href="#certificaciones">Certificaciones</a></li>
+    <li><a href="#educacion">Educación</a></li>
+    <li><a href="#premios">Premios</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="hero-glow hero-glow-1"></div>
+  <div class="hero-glow hero-glow-2"></div>
+
+  <div class="hero-text">
+    <div class="hero-tag">Ing. Agroindustrial · SIG Expert</div>
+    <h1 class="hero-name">Cynthia<br><span>Espejo</span></h1>
+    <p class="hero-title">Sub Gerente de Certificaciones y Sostenibilidad con más de <strong>14 años de experiencia</strong> liderando Sistemas Integrados de Gestión en el sector agroindustrial.</p>
+    <div class="hero-badges">
+      <span class="badge badge-green">ISO 9001 · 14001</span>
+      <span class="badge badge-blue">GLOBALG.A.P.</span>
+      <span class="badge badge-purple">BRCGS · FSMA</span>
+      <span class="badge badge-orange">Sostenibilidad</span>
+    </div>
+    <div class="hero-cta">
+      <a href="#experiencia" class="btn-primary">Ver Experiencia</a>
+      <a href="#contacto" class="btn-outline">Contactar</a>
+    </div>
+  </div>
+
+  <div class="hero-photo">
+    <div class="photo-frame">
+      <img src="foto.jpeg" alt="Cynthia Espejo"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+      <div class="photo-fallback" style="display:none;">
+        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1">
+          <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+        <span>foto.jpeg</span>
+      </div>
+      <div class="years-badge">
+        <div class="num">14+</div>
+        <div class="label">Años de<br>Experiencia</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div id="stats">
+  <div class="stats-grid">
+    <div class="stat-item reveal">
+      <div class="stat-num">500+</div>
+      <div class="stat-label">Productores Certificados</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-num">14</div>
+      <div class="stat-label">Regiones del País</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-num">0</div>
+      <div class="stat-label">No Conformidades en Auditorías</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-num">18+</div>
+      <div class="stat-label">Normas Internacionales</div>
+    </div>
+  </div>
+</div>
+
+<!-- EXPERIENCIA -->
+<section id="experiencia">
+  <div class="section-header reveal">
+    <div class="section-tag">Trayectoria</div>
+    <h2 class="section-title">Experiencia Profesional</h2>
+  </div>
+
+  <div class="exp-grid">
+    <!-- Westfalia -->
+    <div class="exp-card current reveal">
+      <div class="exp-header">
+        <div>
+          <div class="exp-company">Westfalia Fruit Perú S.A.C.</div>
+          <div class="exp-role">Sub Gerente de Certificaciones y Sostenibilidad</div>
+        </div>
+        <span class="exp-date">Sep. 2019 – Actualidad</span>
+      </div>
+      <ul class="exp-logros">
+        <li>
+          <span class="logro-icon">◆</span>
+          <span>Lideré la implementación y certificación del vivero, campos propios y grupo de productores (<span class="hl">+500 productores</span>) en <span class="hl">14 regiones</span> del país en un plazo <span class="hl">menor a 3 meses</span>.</span>
+        </li>
+        <li>
+          <span class="logro-icon">◆</span>
+          <span>Alcancé <span class="hl">0 No Conformidades (NC)</span> en diversas normas de la planta de proceso de frescos y aceite, superando el estándar de la industria.</span>
+        </li>
+        <li>
+          <span class="logro-icon">◆</span>
+          <span>Desarrollé e implementé el sistema de medición de <span class="hl-blue">huella de carbono organizacional</span>, integrando un plan de reducción de emisiones alineado con estándares de sostenibilidad internacionales.</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Gandules -->
+    <div class="exp-card mid reveal">
+      <div class="exp-header">
+        <div>
+          <div class="exp-company">Gandules INC S.A.C.</div>
+          <div class="exp-role">Coordinador SIG</div>
+        </div>
+        <span class="exp-date">Dic. 2017 – Jun. 2019</span>
+      </div>
+      <ul class="exp-logros">
+        <li>
+          <span class="logro-icon">◆</span>
+          <span>Lideré la <span class="hl">reducción significativa de no conformidades</span> durante auditorías de recertificación y clientes en plantas de proceso, fortaleciendo el cumplimiento normativo.</span>
+        </li>
+        <li>
+          <span class="logro-icon">◆</span>
+          <span>Implementé y organicé la <span class="hl-blue">plataforma digital para gestión documental del SIG</span>, optimizando el acceso y control de la información en todos los niveles de la organización.</span>
+        </li>
+        <li>
+          <span class="logro-icon">◆</span>
+          <span>Gestioné la implementación y certificación del sistema <span class="hl">BASC en las 4 sedes</span> de la empresa, garantizando estándares de seguridad en la cadena de suministro.</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Virú -->
+    <div class="exp-card early reveal">
+      <div class="exp-header">
+        <div>
+          <div class="exp-company">Virú S.A.</div>
+          <div class="exp-role">Practicante → Asistente → Coordinador SIG</div>
+        </div>
+        <span class="exp-date">Feb. 2012 – Dic. 2017 / Jul. 2019 – Sep. 2019</span>
+      </div>
+      <ul class="exp-logros">
+        <li>
+          <span class="logro-icon">◆</span>
+          <span>Fortalecí la gestión ambiental y seguridad en la cadena de suministro, alineando procesos con los requisitos de <span class="hl">ISO 14001:2015 y BASC</span>.</span>
+        </li>
+        <li>
+          <span class="logro-icon">◆</span>
+          <span>Lideré y supervisé la aprobación del <span class="hl-blue">IGA (Instrumento de Gestión Ambiental)</span> para la nueva sucursal, garantizando la conformidad regulatoria.</span>
+        </li>
+        <li>
+          <span class="logro-icon">◆</span>
+          <span>Optimicé la <span class="hl">gestión de residuos en naves de proceso</span>, promoviendo operaciones más sostenibles y con menor impacto ambiental.</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- PROYECTOS -->
+<div id="proyectos">
+  <div class="section-header reveal">
+    <div class="section-tag">Iniciativas Clave</div>
+    <h2 class="section-title">Proyectos Destacados</h2>
+  </div>
+  <div class="proj-grid">
+    <div class="proj-card reveal">
+      <div class="proj-glow"></div>
+      <div class="proj-icon">🌱</div>
+      <div class="proj-title">Certificación Masiva de Productores</div>
+      <div class="proj-company">Westfalia Fruit Perú</div>
+      <div class="proj-desc">Implementación y certificación simultánea del vivero, campos propios y red de productores bajo estándares GLOBALG.A.P., GRASP y Rainforest Alliance.</div>
+      <div class="proj-metric">
+        <strong class="hl">+500 Productores</strong>
+        en 14 regiones · &lt;3 meses
+      </div>
+    </div>
+
+    <div class="proj-card reveal">
+      <div class="proj-glow"></div>
+      <div class="proj-icon">🌍</div>
+      <div class="proj-title">Sistema de Huella de Carbono</div>
+      <div class="proj-company">Westfalia Fruit Perú</div>
+      <div class="proj-desc">Desarrollo e implementación del sistema de medición y reporte de huella de carbono a nivel organizacional, con plan de reducción de emisiones alineado a estándares internacionales de sostenibilidad.</div>
+      <div class="proj-metric">
+        <strong class="hl-blue">Alcance Corporativo</strong>
+        Medición + Plan de Reducción
+      </div>
+    </div>
+
+    <div class="proj-card reveal">
+      <div class="proj-glow"></div>
+      <div class="proj-icon">🏭</div>
+      <div class="proj-title">Cero NC en Plantas de Proceso</div>
+      <div class="proj-company">Westfalia Fruit Perú</div>
+      <div class="proj-desc">Gestión integral de certificaciones en planta de frescos y aceite, logrando cero no conformidades en múltiples auditorías de normas nacionales e internacionales.</div>
+      <div class="proj-metric">
+        <strong class="hl">0 NC</strong>
+        Múltiples normas · Frescos & Aceite
+      </div>
+    </div>
+
+    <div class="proj-card reveal">
+      <div class="proj-glow"></div>
+      <div class="proj-icon">🔐</div>
+      <div class="proj-title">Certificación BASC Multi-sede</div>
+      <div class="proj-company">Gandules INC S.A.C.</div>
+      <div class="proj-desc">Implementación y certificación del sistema de seguridad BASC en las cuatro sedes de la empresa, garantizando la integridad de la cadena de suministro.</div>
+      <div class="proj-metric">
+        <strong class="hl-purple">4 Sedes</strong>
+        BASC · Cadena de Suministro
+      </div>
+    </div>
+
+    <div class="proj-card reveal">
+      <div class="proj-glow"></div>
+      <div class="proj-icon">💻</div>
+      <div class="proj-title">Digitalización del SIG</div>
+      <div class="proj-company">Gandules INC S.A.C.</div>
+      <div class="proj-desc">Diseño e implementación de plataforma digital para la gestión documental del Sistema Integrado de Gestión, optimizando el acceso y control de la información en toda la organización.</div>
+      <div class="proj-metric">
+        <strong class="hl-blue">Cobertura Total</strong>
+        Todos los niveles organizacionales
+      </div>
+    </div>
+
+    <div class="proj-card reveal">
+      <div class="proj-glow"></div>
+      <div class="proj-icon">📋</div>
+      <div class="proj-title">Aprobación IGA Nueva Sucursal</div>
+      <div class="proj-company">Virú S.A.</div>
+      <div class="proj-desc">Liderazgo y supervisión del proceso de aprobación del Instrumento de Gestión Ambiental para la nueva sucursal, garantizando conformidad regulatoria y habilitación operativa.</div>
+      <div class="proj-metric">
+        <strong class="hl">ISO 14001:2015</strong>
+        Conformidad · BASC
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CERTIFICACIONES -->
+<section id="certificaciones">
+  <div class="section-header reveal">
+    <div class="section-tag">Formación Especializada</div>
+    <h2 class="section-title">Certificaciones & Normas</h2>
+  </div>
+  <div class="cert-grid reveal">
+    <div class="cert-pill">ISO 9001:2015<br><small>Auditor Líder</small></div>
+    <div class="cert-pill">ISO 9001<br><small>Auditor Interno</small></div>
+    <div class="cert-pill">ISO 14001<br><small>Auditor Interno</small></div>
+    <div class="cert-pill">GLOBALG.A.P.</div>
+    <div class="cert-pill">GRASP</div>
+    <div class="cert-pill">SPRING</div>
+    <div class="cert-pill">TESCO NURTURE</div>
+    <div class="cert-pill">RAINFOREST ALLIANCE</div>
+    <div class="cert-pill">ORGÁNICOS</div>
+    <div class="cert-pill">LEAF MARQUE</div>
+    <div class="cert-pill">CoC</div>
+    <div class="cert-pill">BRCGS</div>
+    <div class="cert-pill">FSMA</div>
+    <div class="cert-pill">SMETA</div>
+    <div class="cert-pill">BSCI</div>
+    <div class="cert-pill">BASC</div>
+  </div>
+</section>
+
+<!-- EDUCACIÓN -->
+<div id="educacion">
+  <div class="section-header reveal">
+    <div class="section-tag">Formación Académica</div>
+    <h2 class="section-title">Educación</h2>
+  </div>
+  <div class="edu-grid">
+    <div class="edu-card reveal">
+      <div class="edu-year">2019</div>
+      <div class="edu-icon">🎓</div>
+      <div class="edu-degree">Maestra en Ciencias – Gestión Ambiental</div>
+      <div class="edu-uni">Universidad Nacional de Trujillo</div>
+      <div class="edu-date">2019</div>
+    </div>
+    <div class="edu-card reveal">
+      <div class="edu-year">2011</div>
+      <div class="edu-icon">🌾</div>
+      <div class="edu-degree">Ingeniero Agroindustrial</div>
+      <div class="edu-uni">Universidad Nacional de Trujillo</div>
+      <div class="edu-date">2011</div>
+    </div>
+    <div class="edu-card reveal">
+      <div class="edu-year">2016</div>
+      <div class="edu-icon">📜</div>
+      <div class="edu-degree">Diploma en Sistemas de Gestión de la Calidad, Medio Ambiente, SSO</div>
+      <div class="edu-uni">Pontificia Universidad Católica del Perú</div>
+      <div class="edu-date">2016</div>
+    </div>
+  </div>
+</div>
+
+<!-- PREMIOS -->
+<section id="premios">
+  <div class="section-header reveal">
+    <div class="section-tag">Reconocimientos</div>
+    <h2 class="section-title">Premios & Distinciones</h2>
+  </div>
+  <div class="awards-grid">
+    <div class="award-card reveal">
+      <div class="award-icon">🏆</div>
+      <div>
+        <div class="award-title">Reconocimiento SOSTENIBILIDAD AGAP 2025</div>
+        <div class="award-org">AgroFest Summit & Expo · Categoría "Inclusión Social"</div>
+        <div class="award-year">2025</div>
+      </div>
+    </div>
+    <div class="award-card reveal">
+      <div class="award-icon">🥇</div>
+      <div>
+        <div class="award-title">Excelencia en Preparación Documentaria para Auditoría Orgánica</div>
+        <div class="award-org">CAAE AMÉRTICA S.A.C.</div>
+        <div class="award-year">2025</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HABILIDADES -->
+<div id="habilidades">
+  <div class="section-header reveal">
+    <div class="section-tag">Competencias</div>
+    <h2 class="section-title">Habilidades & Idiomas</h2>
+  </div>
+  <div class="skills-grid">
+    <div class="skills-col reveal">
+      <h3>Habilidades Profesionales</h3>
+      <div class="skill-item">
+        <div class="skill-header"><span>Liderazgo de Equipos</span><span>95%</span></div>
+        <div class="skill-bar"><div class="skill-fill" style="width:95%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-header"><span>Sistemas de Gestión (SIG)</span><span>99%</span></div>
+        <div class="skill-bar"><div class="skill-fill" style="width:99%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-header"><span>Auditorías & Certificaciones</span><span>97%</span></div>
+        <div class="skill-bar"><div class="skill-fill" style="width:97%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-header"><span>Sostenibilidad & Huella de Carbono</span><span>90%</span></div>
+        <div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-header"><span>Control de Presupuesto</span><span>85%</span></div>
+        <div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-header"><span>SAP</span><span>80%</span></div>
+        <div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div>
+      </div>
+    </div>
+    <div class="skills-col reveal">
+      <h3>Idiomas</h3>
+      <div class="lang-item">
+        <span>🇵🇪 Español</span>
+        <span class="lang-level" style="color:var(--green)">Nativo</span>
+      </div>
+      <div class="lang-item">
+        <span>🇬🇧 Inglés</span>
+        <span class="lang-level" style="color:var(--blue)">Básico</span>
+      </div>
+      <div class="lang-item">
+        <span>🇧🇷 Portugués</span>
+        <span class="lang-level" style="color:var(--purple)">Básico</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="section-header reveal">
+    <div class="section-tag">Contáctame</div>
+    <h2 class="section-title">Hablemos</h2>
+  </div>
+  <div class="contact-grid">
+    <div class="reveal">
+      <p class="contact-intro">¿Tienes un proyecto de certificación, sostenibilidad o gestión de calidad? Estoy disponible para colaborar y aportar mi experiencia al crecimiento de tu organización.</p>
+      <a href="tel:956472357" class="btn-primary">📞 Llamar Ahora</a>
+    </div>
+    <div class="contact-items reveal">
+      <a href="tel:956472357" class="contact-item">
+        <span class="contact-icon">📞</span>
+        <div>
+          <div class="contact-label">Teléfono</div>
+          <div class="contact-value">956 472 357</div>
+        </div>
+      </a>
+      <a href="mailto:cjespejoi@gmail.com" class="contact-item">
+        <span class="contact-icon">✉️</span>
+        <div>
+          <div class="contact-label">Email</div>
+          <div class="contact-value">cjespejoi@gmail.com</div>
+        </div>
+      </a>
+      <a href="https://www.linkedin.com/in/cynthia-jesenia-espejo-ibañez-58692ba9" target="_blank" class="contact-item">
+        <span class="contact-icon">💼</span>
+        <div>
+          <div class="contact-label">LinkedIn</div>
+          <div class="contact-value">Cynthia Jesenia Espejo Ibáñez</div>
+        </div>
+      </a>
+      <div class="contact-item">
+        <span class="contact-icon">📍</span>
+        <div>
+          <div class="contact-label">Ubicación</div>
+          <div class="contact-value">Mz A Lote 01 – Las Palmeras de San Andrés, Trujillo</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 <strong>Cynthia Espejo</strong> · Ing. Agroindustrial · Certificaciones & Sostenibilidad · Trujillo, Perú</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => io.observe(el));
+
+  // Animated counters
+  function animateCounter(el, target, suffix = '') {
+    let start = 0;
+    const duration = 2000;
+    const step = timestamp => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(ease * target) + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  const statNums = document.querySelectorAll('.stat-num');
+  const counterIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const text = e.target.textContent;
+        if (text.includes('500')) animateCounter(e.target, 500, '+');
+        else if (text.includes('14') && !text.includes('+')) animateCounter(e.target, 14, '');
+        else if (text === '0') { /* keep 0 */ }
+        else if (text.includes('18')) animateCounter(e.target, 18, '+');
+        counterIO.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  statNums.forEach(el => counterIO.observe(el));
+</script>
+</body>
+</html>
